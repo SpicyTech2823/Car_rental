@@ -1,11 +1,12 @@
 import React from 'react'
+import Navbar from './components/Navbar';
+import Home from './components/Home';
 
 const App = () => {
   return (
-    <div>
-      <h1 className="text-3xl font-bold underline text-center mt-10 text-indigo-500">
-        Hello, This is Car rental Application!
-      </h1>
+    <div className="bg-white">
+      <Navbar />
+      <Home />
     </div>
   )
 }
