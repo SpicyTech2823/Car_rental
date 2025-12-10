@@ -3,6 +3,11 @@ import video from "../assets/Videos/video1.mp4";
 import car from "../assets/Images/car-insurance.png";
 import schedule from "../assets/Images/schedule.png";
 import customer_support from "../assets/Images/customer-support.png";
+import rent_car from "../assets/Videos/rent_car.mp4";
+import emma from "../assets/Images/emma.jpg";
+import javson from "../assets/Images/javson.jpg";
+import julia from "../assets/Images/julia.jpg";
+
 const Home = () => {
   const videoRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -27,6 +32,45 @@ const Home = () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
+
+  const testimonials = [
+  {
+    name: "Mark Stevens",
+    image: emma,
+    rating: 5,
+    text: "I needed a reliable car for my business trip, and this service exceeded my expectations. The booking process was seamless, and the car was in excellent condition. Highly recommend their city rentals!"
+  },
+  {
+    name: "Lisa Anderson",
+    image: javson,
+    rating: 4,
+    text: "As a frequent traveler for work, I rely on car rental services often. This company has become my go-to because of their reliable vehicles and excellent customer service. I’ve never been disappointed!"
+  },
+  {
+    name: "Brian T",
+    image: julia,
+    rating: 4,
+    text: "It was fuel-efficient and environmentally friendly, which is important to me. I loved that this company offers sustainable options for modern travelers!"
+  },
+  {
+    name: "Emma Johnson",
+    image: emma,
+    rating: 5,
+    text: "I needed a rental for a last-minute trip, and this service made it so easy! The car was clean, the rates were affordable, and the pickup was hassle-free. I’ll use them again."
+  },
+  {
+    name: "Jessica Ramirez",
+    image: javson,
+    rating: 5,
+    text: "There is plenty of room for everyone and all our luggage. The process was easy, and the customer service was top-notch."
+  },
+  {
+    name: "Laura J.",
+    image: julia,
+    rating: 5,
+    text: "The rates were competitive, and the team made it easy to extend my rental when my plans changed. Highly recommended!"
+  },
+];
 
   return (
     <section>
@@ -69,7 +113,7 @@ const Home = () => {
                 }}
               >
                 Welcome to
-                <span className="block mt-2 bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
+                <span className="block mt-2 bg-gradient-to-r from-cyan-400 to-red-800 bg-clip-text text-transparent">
                   Our Carent Service
                 </span>
               </h1>
@@ -136,7 +180,8 @@ const Home = () => {
       {/* Additional content can go here */}
       <div className="w-full flex flex-col items-center justify-center py-16 px-4 bg-gray-50">
         <h1 className="text-2xl md:text-3xl lg:text-4xl font-light text-center max-w-3xl text-gray-800">
-          Enjoy flexibility and unbeatable rates <br /> with our city car rentals
+          Enjoy flexibility and unbeatable rates <br /> with our city car
+          rentals
         </h1>
         <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-12 max-w-6xl mx-auto text-center">
           {/* Feature 1 */}
@@ -157,27 +202,128 @@ const Home = () => {
             <div className="flex justify-center mb-4">
               <img src={schedule} alt="schedule" className="w-20 h-20" />
             </div>
-            <h3 className="text-xl font-medium mb-2">
-              Easy online booking
-            </h3>
+            <h3 className="text-xl font-medium mb-2">Easy online booking</h3>
             <p className="text-gray-600">
-              Book your car in minutes with our user-friendly online platform. Fast, simple, and convenient!
+              Book your car in minutes with our user-friendly online platform.
+              Fast, simple, and convenient!
             </p>
           </div>
           {/* Feature 3 */}
           <div>
             <div className="flex justify-center mb-4">
-              <img src={customer_support} alt="customer_support" className="w-20 h-20" />
+              <img
+                src={customer_support}
+                alt="customer_support"
+                className="w-20 h-20"
+              />
             </div>
-            <h3 className="text-xl font-medium mb-2">
-              Support 24/7
-            </h3>
+            <h3 className="text-xl font-medium mb-2">Support 24/7</h3>
             <p className="text-gray-600 ">
-              We’re here to assist you anytime, anywhere. Drive with peace of mind knowing help is just a call away.
+              We’re here to assist you anytime, anywhere. Drive with peace of
+              mind knowing help is just a call away.
             </p>
           </div>
         </div>
       </div>
+      {/* Tip to book the car */}
+      <div className="bg-gray-50 w-full rounded-t-lg py-10 px-8 flex flex-col items-center">
+        <div className="flex flex-col lg:flex-row items-center justify-between">
+          {/* Video section */}
+          <div className="w-full lg:w-1/2 h-[300px] md:h-[500px] lg:h-screen overflow-hidden rounded-4xl">
+            <video
+              className="w-full h-full object-cover space-x-reverse "
+              src={rent_car}
+              autoPlay
+              loop
+              muted
+              playsInline
+            />
+          </div>
+          {/* Text section */}
+          <div className="w-full lg:w-1/2 py-12 px-6 lg:px-20 mb-20 "> 
+            <h2 className="text-red-800 text-3xl md:text-4xl lg:text-5xl font-semibold text-center p-10 mb-7">
+              Rent your car in 3 easy steps
+            </h2>
+            <div className="space-y-20">
+              {/* Step1 */}
+              <div className="flex gap-6 items-start">
+                <span className="inline-flex flex-none bg-red-800 text-white w-14 h-14 items-center justify-center rounded-full font-bold text-xl">
+                  01
+                </span>
+                <div>
+                  <h3 className="text-2xl font-bold text-red-800">Choose your car</h3>
+                  <p className="text-black text-[20px] ">
+                    Browse our wide selection of vehicles, from compact city
+                    cars to spacious SUVs. Pick the perfect ride that suits your
+                    needs.
+                  </p>
+                </div>
+              </div>
+              {/* Step 2 */}
+              <div className="flex gap-6 items-start">
+                <span className="inline-flex flex-none bg-red-800 text-white w-14 h-14 items-center justify-center rounded-full font-bold text-xl">
+                  02
+                </span>
+                <div>
+                  <h3 className="text-2xl font-bold text-red-800">Book online</h3>
+                  <p className="text-black text-[20px]">
+                    Reserve your car with our easy online system. Select your dates & confirm instantly.
+                  </p>
+                </div>
+              </div>
+              {/* Step 3 */}
+              <div className="flex gap-6 items-start">
+                <span className="inline-flex flex-none bg-red-800 text-white w-14 h-14 items-center justify-center rounded-full font-bold text-xl">
+                  03
+                </span>
+                <div>
+                  <h3 className="text-2xl font-bold text-red-800">Pick up & drive</h3>
+                  <p className="text-black text-[20px]">
+                    Collect your car and enjoy a smooth drive with reliable vehicles..
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Feedback from renters */}
+      <div className="w-full py-20 bg-white">
+      <h2 className="text-3xl md:text-4xl font-semibold text-center mb-14">
+        Feedback from satisfied renters
+      </h2>
+
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-6">
+        {testimonials.map((item, index) => (
+          <div key={index} className="bg-gray-100 p-6 rounded-2xl shadow-sm hover:shadow-lg transition duration-300">
+            
+            {/* Stars */}
+            <div className="flex text-yellow-500 mb-3">
+              {Array.from({ length: item.rating }).map((_, i) => (
+                <span key={i} className="text-lg">★</span>
+              ))}
+              {item.rating < 5 && (
+                Array.from({ length: 5 - item.rating }).map((_, i) => (
+                  <span key={i} className="text-gray-400 text-lg">★</span>
+                ))
+              )}
+            </div>
+
+            <p className="text-gray-700 mb-6">{item.text}</p>
+
+            {/* User profile */}
+            <div className="flex items-center gap-3">
+              <img 
+                src={item.image} 
+                alt={item.name} 
+                className="w-10 h-10 rounded-full object-cover"
+              />
+              <p className="font-semibold text-gray-800">{item.name}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
     </section>
   );
 };
