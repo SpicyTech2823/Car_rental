@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import Car from './components/Car';
 import Contact from './components/Contact';
 
+
 const App = () => {
   return (        
      <Router>
@@ -16,7 +17,7 @@ const App = () => {
         <Route path="/car" element={<Car />} />
         <Route path="/contact" element={<Contact />} />
       </Routes>
-      <Footer />
+      
     </Router>
     
   )

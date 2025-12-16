@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logo from "../assets/Images/car_logo.png";
+import logo from "../assets/Images/logo.png";
 
 
 const Navbar = () => {
@@ -11,25 +11,25 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="w-full fixed top-0 left-0 z-50 bg-transparent" role="navigation" aria-label="Main navigation">
+    <nav className="w-full fixed top-5 left-5 z-50 bg-transparent" role="navigation" aria-label="Main navigation">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
             <Link to="/" className="block">
-              <div className="w-12 h-12 md:w-14 md:h-14">
+              <div className="w-full h-full md:w-14 md:h-14">
                 <img
                   src={logo}
                   alt="Car rental logo"
-                  className="w-full h-full rounded-full object-cover object-center"
+                  className="w-18 h-18 rounded-full object-cover object-center"
                 />
               </div>
             </Link>
           </div>
 
           {/* Navigation items */}
-          <div>
-            <ul className="flex items-center space-x-6 md:space-x-8 bg-red-800/70 px-4 py-2 rounded">
+          <div className="hidden md:block">
+            <ul className="flex items-center space-x-6 md:space-x-8 bg-red-800/70 px-10 py-6 rounded-2xl">
               {navItems.map((item) => (
                 <li key={item.id}>
                   <Link
