@@ -1,4 +1,4 @@
-
+import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaGithub } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { useState } from "react";
 const Contact = () => {
@@ -34,12 +34,20 @@ const Contact = () => {
     }
     
   };
+  const socialLinks = [
+      { icon: <FaFacebook />, label: "Facebook", href: "#", color: "blue" },
+      { icon: <FaTwitter />, label: "Twitter", href: "#", color: "lightblue" },
+      { icon: <FaInstagram />, label: "Instagram", href: "#", color: "purple" },
+      { icon: <FaLinkedin />, label: "LinkedIn", href: "#", color: "darkblue" },
+      { icon: <FaGithub />, label: "GitHub", href: "#", color: "black" }
+    ];
   return (
         <section
       id="contact"
-      className="min-h-screen flex items-center justify-center  px-10 py-20"
+      className="min-h-screen flex items-center justify-center px-10 py-20 mt-15"
     >
-      <div className="w-full max-w-5xl shadow-lg rounded-2xl p-8">
+      <div className="w-full max-w-5xl rounded-2xl p-8">
+        
         {/* Heading */}
         <h2 className="text-4xl font-bold text-center text-red-800 mb-10">
           Contact <span className="text-red-900">Me</span>
@@ -47,7 +55,7 @@ const Contact = () => {
         <div className="grid md:grid-cols-2 gap-20">
           {/* Left side */}
           <div>
-            <h3 className="text-2xl font-semibold mb-6 text-red-800">
+            <h3 className="text-2xl font-semibold mb-6 text-red-800 font-sans">
               Get in Touch
             </h3>
             <p className="text-lg text-black mb-8">
@@ -111,7 +119,25 @@ const Contact = () => {
             </button>
           </form>
         </div>
-      </div>
+        <div className="text-center mb-20 mt-15">
+          <h2 className="text-4xl font-bold text-center text-red-800 mb-10 mt-20">
+          Touch in <span className="text-red-900">Social</span>
+          <div className="flex space-x-10 gap-8 justify-center mt-15">
+              {socialLinks.map((social, index) => (
+                <a
+                  key={index}
+                  href={social.href}
+                  aria-label={social.label}
+                   style={{ color: social.color }}
+                  className=" hover:text-gray-400 transition-colors duration-300 transform hover:scale-110 text-5xl"
+                >
+                  {social.icon}
+                </a>
+              ))}
+            </div>
+        </h2>
+        </div>
+      </div> 
     </section>
   );
 };

@@ -165,13 +165,6 @@ const About = () => {
           </div>
         </div>
       </main>
-
-      {/* Footer Note */}
-      <footer className="border-t border-gray-200 mt-16 py-8">
-        <div className="container mx-auto px-4 md:px-8 max-w-6xl text-center">
-          <p className="text-gray-500">© {new Date().getFullYear()} Carent Car Rental. All rights reserved.</p>
-        </div>
-      </footer>
     </div>
   );
 };

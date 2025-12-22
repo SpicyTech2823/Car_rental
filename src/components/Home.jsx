@@ -7,6 +7,8 @@ import rent_car from "../assets/Videos/rent_car.mp4";
 import emma from "../assets/Images/emma.jpg";
 import javson from "../assets/Images/javson.jpg";
 import julia from "../assets/Images/julia.jpg";
+import { Link } from "react-router-dom";
+import carsData from "../data/carsData";
 
 const Home = () => {
   const videoRef = useRef(null);
@@ -71,6 +73,26 @@ const Home = () => {
     text: "The rates were competitive, and the team made it easy to extend my rental when my plans changed. Highly recommended!"
   },
 ];
+  // Car slider 
+  const carsPerPage = 4; // change if you want
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const nextCar = () => {
+    if (currentIndex + carsPerPage < carsData.length) {
+      setCurrentIndex(currentIndex + carsPerPage);
+    }
+  };
+
+  const prevCar = () => {
+    if (currentIndex - carsPerPage >= 0) {
+      setCurrentIndex(currentIndex - carsPerPage);
+    }
+  };
+
+  const visibleCars = carsData.slice(
+    currentIndex,
+    currentIndex + carsPerPage
+  );
 
   return (
     <section>
@@ -145,16 +167,19 @@ const Home = () => {
                     : "translate-y-8 opacity-0"
                 }`}
               >
-                <button className="group relative px-8 py-4 bg-white/10 backdrop-blur-md rounded-full border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl overflow-hidden">
+                <button className="group relative px-8 py-4 bg-white/10 backdrop-blur-md rounded-full border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl overflow-hidden"
+                  onClick={() => window.location.reload()}>
                   <span className="relative z-10 font-semibold text-lg">
                     Get Started
                   </span>
                   <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </button>
-
+                <Link to="/about">
                 <button className="group px-8 py-4 border border-white/30 rounded-full hover:bg-white/10 backdrop-blur-md transition-all duration-300 hover:scale-105 hover:shadow-xl">
                   <span className="font-semibold text-lg">Learn More</span>
                 </button>
+                </Link>
+                
               </div>
             </div>
           </div>
@@ -225,6 +250,64 @@ const Home = () => {
           </div>
         </div>
       </div>
+      {/* Car collection */}
+      <div className="w-full bg-gray-50 py-16 px-4">
+    <h1 className="text-4xl font-bold text-center mb-10">
+      Our rental car collection
+    </h1>
+
+    <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-4 gap-8 pb-12">
+      {visibleCars.map((car) => (
+        <div
+          key={car.id}
+          className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300"
+        >
+          <img
+            src={car.image}
+            alt={car.name}
+            className="w-full h-48 object-cover"
+          />
+
+          <div className="p-4">
+            <h3 className="text-lg font-semibold mb-2">{car.name}</h3>
+            <p className="text-gray-600 mb-4">{car.description}</p>
+
+            <div className="flex items-center justify-between">
+              <span className="text-red-800 font-bold text-xl">
+                ${car.price}{car.perDay ? "/day" : ""}
+              </span>
+
+              <Link
+                to="/car"
+                className="bg-red-800 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
+              >
+                Book Now
+              </Link>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    {/* Arrows */}
+    <div className="flex justify-center gap-6">
+      <button
+        onClick={prevCar}
+        disabled={currentIndex === 0}
+        className="text-2xl px-4 py-2 border rounded-full hover:bg-gray-200 disabled:opacity-30"
+      >
+        ←
+      </button>
+
+      <button
+        onClick={nextCar}
+        disabled={currentIndex + carsPerPage >= carsData.length}
+        className="text-2xl px-4 py-2 border rounded-full hover:bg-gray-200 disabled:opacity-30"
+      >
+        →
+      </button>
+    </div>
+  </div>
       {/* Tip to book the car */}
       <div className="bg-gray-50 w-full rounded-t-lg py-10 px-8 flex flex-col items-center">
         <div className="flex flex-col lg:flex-row items-center justify-between">
