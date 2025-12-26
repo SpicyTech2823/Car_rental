@@ -1,56 +1,36 @@
 // CarsPage.jsx
 import React, { useState, useEffect } from 'react';
 import { Check, CreditCard, Calendar, User, Mail, Phone, QrCode } from 'lucide-react';
+import { supabase } from '../utils/supabase';
+import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const CarsPage = () => {
-  // Sample car data
-  const carsData = [
-    {
-      id: 1,
-      name: "Compact City Cruiser",
-      category: ["All cars", "Business", "Family"],
-      price: 150,
-      perDay: true,
-      description: "Perfect for city driving with excellent fuel efficiency",
-      features: ["5 Seats", "Automatic", "AC", "Bluetooth"],
-      image: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-    },
-    {
-      id: 2,
-      name: "Spacious SUV",
-      category: ["All cars", "Family", "Adventure"],
-      price: 195,
-      perDay: true,
-      description: "Comfortable family SUV with ample space for luggage",
-      features: ["7 Seats", "Automatic", "4WD", "Sunroof"],
-      image: "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-    },
-    {
-      id: 3,
-      name: "Luxury Sedan",
-      category: ["All cars", "Business", "Wedding"],
-      price: 250,
-      perDay: true,
-      description: "Premium luxury sedan for business executives",
-      features: ["5 Seats", "Automatic", "Leather Seats", "Premium Sound"],
-      image: "https://images.unsplash.com/photo-1555212697-194d092e3b8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-    },
-    {
-      id: 4,
-      name: "Convertible Sports",
-      category: ["All cars", "Adventure", "Wedding"],
-      price: 300,
-      perDay: true,
-      description: "Experience the open road with this stylish convertible",
-      features: ["2 Seats", "Automatic", "Convertible", "Premium"],
-      image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-    }
-  ];
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!user) {
+      navigate('/login');
+    }
+  }, [user, navigate]);
+
+  // If not authenticated, show loading or redirect message
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-lg text-gray-600">Please log in to access car booking.</p>
+        </div>
+      </div>
+    );
+  }
   // Categories
   const categories = ["All cars", "Business", "Family", "Adventure", "Wedding"];
 
   // State
+  const [cars, setCars] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All cars");
   const [selectedCar, setSelectedCar] = useState(null);
   const [bookingStep, setBookingStep] = useState(1); // 1: Select car, 2: Booking form, 3: Payment, 4: Invoice
@@ -65,10 +45,22 @@ const CarsPage = () => {
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [isPaid, setIsPaid] = useState(false);
 
+  useEffect(() => {
+    const fetchCars = async () => {
+      const { data, error } = await supabase.from('cars').select('*');
+      if (error) {
+        console.error('Error fetching cars:', error);
+      } else {
+        setCars(data);
+      }
+    };
+    fetchCars();
+  }, []);
+
   // Filter cars based on selected category
   const filteredCars = selectedCategory === "All cars" 
-    ? carsData 
-    : carsData.filter(car => car.category.includes(selectedCategory));
+    ? cars 
+    : cars.filter(car => car.category.includes(selectedCategory));
 
   // Calculate total price
   const calculateTotal = () => {
@@ -83,7 +75,34 @@ const CarsPage = () => {
   };
 
   // Handle payment
-  const handlePayment = () => {
+  const handlePayment = async () => {
+    if (!selectedCar) return;
+
+    const totalPrice = calculateTotal();
+
+    const { data, error } = await supabase
+      .from('bookings')
+      .insert([
+        {
+          car_id: selectedCar.id,
+          customer_name: bookingDetails.name,
+          email: bookingDetails.email,
+          phone: bookingDetails.phone,
+          pickup_date: bookingDetails.pickupDate,
+          return_date: bookingDetails.returnDate,
+          days: bookingDetails.days,
+          total_price: totalPrice,
+          payment_method: paymentMethod,
+          is_paid: true
+        }
+      ]);
+
+    if (error) {
+      console.error('Error saving booking:', error);
+      alert('Error saving booking. Please try again.');
+      return;
+    }
+
     setIsPaid(true);
     setBookingStep(4);
   };

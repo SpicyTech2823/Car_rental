@@ -1,15 +1,24 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import logo from "../assets/Images/logo.png";
 
-
 const Navbar = () => {
+  const { user, signOut } = useAuth();
+
   const navItems = [
     { id: "home", label: "Home" },
     { id: "about", label: "About" },
     { id: "car", label: "Cars" },
     { id: "contact", label: "Contact" },
-    { id: "login", label: "Login" },
   ];
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
 
   return (
     <nav className="w-full fixed top-5 left-5 z-50 bg-transparent" role="navigation" aria-label="Main navigation">
@@ -41,6 +50,30 @@ const Navbar = () => {
                   </Link>
                 </li>
               ))}
+
+              {/* Auth buttons */}
+              {user ? (
+                <li className="flex items-center space-x-4">
+                  <span className="text-white text-lg">
+                    Welcome, {user.user_metadata?.name || user.email}
+                  </span>
+                  <button
+                    onClick={handleSignOut}
+                    className="text-white text-lg hover:text-red-200 transition-colors duration-200 px-2 py-1"
+                  >
+                    Logout
+                  </button>
+                </li>
+              ) : (
+                <li>
+                  <Link
+                    to="/login"
+                    className="text-white text-lg hover:text-red-200 transition-colors duration-200 px-2 py-1"
+                  >
+                    Login
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
         </div>

@@ -8,14 +8,27 @@ import emma from "../assets/Images/emma.jpg";
 import javson from "../assets/Images/javson.jpg";
 import julia from "../assets/Images/julia.jpg";
 import { Link } from "react-router-dom";
-import carsData from "../data/carsData";
+import { supabase } from "../utils/supabase";
+import Feedback from "./Feedback";
 
 const Home = () => {
   const videoRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [cars, setCars] = useState([]);
 
   useEffect(() => {
     setIsVisible(true);
+
+    // Fetch cars from Supabase
+    const fetchCars = async () => {
+      const { data, error } = await supabase.from('cars').select('*');
+      if (error) {
+        console.error('Error fetching cars:', error);
+      } else {
+        setCars(data);
+      }
+    };
+    fetchCars();
 
     // Optional: Add video play/pause on visibility
     const handleVisibilityChange = () => {
@@ -35,50 +48,12 @@ const Home = () => {
     };
   }, []);
 
-  const testimonials = [
-  {
-    name: "Mark Stevens",
-    image: emma,
-    rating: 5,
-    text: "I needed a reliable car for my business trip, and this service exceeded my expectations. The booking process was seamless, and the car was in excellent condition. Highly recommend their city rentals!"
-  },
-  {
-    name: "Lisa Anderson",
-    image: javson,
-    rating: 4,
-    text: "As a frequent traveler for work, I rely on car rental services often. This company has become my go-to because of their reliable vehicles and excellent customer service. I’ve never been disappointed!"
-  },
-  {
-    name: "Brian T",
-    image: julia,
-    rating: 4,
-    text: "It was fuel-efficient and environmentally friendly, which is important to me. I loved that this company offers sustainable options for modern travelers!"
-  },
-  {
-    name: "Emma Johnson",
-    image: emma,
-    rating: 5,
-    text: "I needed a rental for a last-minute trip, and this service made it so easy! The car was clean, the rates were affordable, and the pickup was hassle-free. I’ll use them again."
-  },
-  {
-    name: "Jessica Ramirez",
-    image: javson,
-    rating: 5,
-    text: "There is plenty of room for everyone and all our luggage. The process was easy, and the customer service was top-notch."
-  },
-  {
-    name: "Laura J.",
-    image: julia,
-    rating: 5,
-    text: "The rates were competitive, and the team made it easy to extend my rental when my plans changed. Highly recommended!"
-  },
-];
   // Car slider 
   const carsPerPage = 4; // change if you want
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextCar = () => {
-    if (currentIndex + carsPerPage < carsData.length) {
+    if (currentIndex + carsPerPage < cars.length) {
       setCurrentIndex(currentIndex + carsPerPage);
     }
   };
@@ -89,7 +64,7 @@ const Home = () => {
     }
   };
 
-  const visibleCars = carsData.slice(
+  const visibleCars = cars.slice(
     currentIndex,
     currentIndex + carsPerPage
   );
@@ -301,7 +276,7 @@ const Home = () => {
 
       <button
         onClick={nextCar}
-        disabled={currentIndex + carsPerPage >= carsData.length}
+        disabled={currentIndex + carsPerPage >= cars.length}
         className="text-2xl px-4 py-2 border rounded-full hover:bg-gray-200 disabled:opacity-30"
       >
         →
@@ -371,42 +346,7 @@ const Home = () => {
         </div>
       </div>
       {/* Feedback from renters */}
-      <div className="w-full py-20 bg-white">
-      <h2 className="text-3xl md:text-4xl font-semibold text-center mb-14">
-        Feedback from satisfied renters
-      </h2>
-
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-6">
-        {testimonials.map((item, index) => (
-          <div key={index} className="bg-gray-100 p-6 rounded-2xl shadow-sm hover:shadow-lg transition duration-300">
-            
-            {/* Stars */}
-            <div className="flex text-yellow-500 mb-3">
-              {Array.from({ length: item.rating }).map((_, i) => (
-                <span key={i} className="text-lg">★</span>
-              ))}
-              {item.rating < 5 && (
-                Array.from({ length: 5 - item.rating }).map((_, i) => (
-                  <span key={i} className="text-gray-400 text-lg">★</span>
-                ))
-              )}
-            </div>
-
-            <p className="text-gray-700 mb-6">{item.text}</p>
-
-            {/* User profile */}
-            <div className="flex items-center gap-3">
-              <img 
-                src={item.image} 
-                alt={item.name} 
-                className="w-10 h-10 rounded-full object-cover"
-              />
-              <p className="font-semibold text-gray-800">{item.name}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+      <Feedback />
     </section>
   );
 };

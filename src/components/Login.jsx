@@ -1,7 +1,48 @@
 import { useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [showLogin, setShowLogin] = useState(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const { signIn, signUp } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    try {
+      await signIn(email, password);
+      navigate("/");
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    try {
+      await signUp(email, password, { name, phone });
+      setError("Registration successful! Please check your email to confirm your account.");
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray py-12 px-4 sm:px-6 lg:px-8 mt-6">
@@ -16,10 +57,10 @@ export default function Login() {
             </div>
 
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-              <form action="#" method="POST" className="space-y-6">
+              <form onSubmit={handleLogin} className="space-y-6">
                 <div>
                   <label
-                    for="email"
+                    htmlFor="email"
                     className="block text-sm/6 font-medium text-red-900 "
                   >
                     Email address
@@ -30,58 +71,193 @@ export default function Login() {
                       type="email"
                       name="email"
                       required
-                      autocomplete="email"
-                      class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base border-2 border-red-900 outline-1 -outline-offset-1 outline-white/10 placeholder:text-red-500 focus:outline-2 focus:-outline-offset-2 focus:outline-red-900 sm:text-sm/6 "
+                      autoComplete="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base border-2 border-red-900 outline-1 -outline-offset-1 outline-white/10 placeholder:text-red-500 focus:outline-2 focus:-outline-offset-2 focus:outline-red-900 sm:text-sm/6 "
                     />
                   </div>
                 </div>
 
                 <div>
-                  <div class="flex items-center justify-between">
+                  <div className="flex items-center justify-between">
                     <label
-                      for="password"
-                      class="block text-sm/6 font-medium text-red-900"
+                      htmlFor="password"
+                      className="block text-sm/6 font-medium text-red-900"
                     >
                       Password
                     </label>
-                    <div class="text-sm">
+                    <div className="text-sm">
                       <a
                         href="#"
-                        class="font-semibold text-indigo-400 hover:text-indigo-300"
+                        className="font-semibold text-indigo-400 hover:text-indigo-300"
                       >
                         Forgot password?
                       </a>
                     </div>
                   </div>
-                  <div class="mt-2">
+                  <div className="mt-2">
                     <input
                       id="password"
                       type="password"
                       name="password"
                       required
-                      autocomplete="current-password"
-                      class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base border-2 border-red-900 text-black outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+                      autoComplete="current-password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base border-2 border-red-900 text-black outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+                    />
+                  </div>
+                </div>
+
+                {error && (
+                  <div className="text-red-600 text-sm text-center">{error}</div>
+                )}
+
+                <div>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="flex w-full justify-center rounded-md bg-red-900 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-red-800 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                  >
+                    {loading ? "Signing in..." : "Sign in"}
+                  </button>
+                </div>
+              </form>
+
+              <p className="mt-10 text-center text-sm/6 text-gray-400">
+                Not a member?
+                <a
+                  href="#"
+                  className="font-semibold text-indigo-400 hover:text-indigo-300 cursor-pointer"
+                  onClick={() => setShowLogin(false)}
+                >
+                  Start a 14 day free trial
+                </a>
+              </p>
+            </div>
+          </div>
+        )}
+
+        {!showLogin && (
+          <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+            <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+              <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-red-800">
+                Create your account
+              </h2>
+            </div>
+
+            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+              <form onSubmit={handleRegister} className="space-y-6">
+                <div>
+                  <label
+                    htmlFor="name"
+                    className="block text-sm/6 font-medium text-red-900"
+                  >
+                    Full Name
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      id="name"
+                      type="text"
+                      name="name"
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="block w-full rounded-md bg-white px-3 py-1.5 text-base border-2 border-red-900 outline-1 -outline-offset-1 outline-white/10 placeholder:text-red-500 focus:outline-2 focus:-outline-offset-2 focus:outline-red-900 sm:text-sm/6"
+                      placeholder="Enter your full name"
                     />
                   </div>
                 </div>
 
                 <div>
+                  <label
+                    htmlFor="phone"
+                    className="block text-sm/6 font-medium text-red-900"
+                  >
+                    Phone Number
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      id="phone"
+                      type="tel"
+                      name="phone"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="block w-full rounded-md bg-white px-3 py-1.5 text-base border-2 border-red-900 outline-1 -outline-offset-1 outline-white/10 placeholder:text-red-500 focus:outline-2 focus:-outline-offset-2 focus:outline-red-900 sm:text-sm/6"
+                      placeholder="Enter your phone number"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="register-email"
+                    className="block text-sm/6 font-medium text-red-900"
+                  >
+                    Email address
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      id="register-email"
+                      type="email"
+                      name="email"
+                      required
+                      autoComplete="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="block w-full rounded-md bg-white px-3 py-1.5 text-base border-2 border-red-900 outline-1 -outline-offset-1 outline-white/10 placeholder:text-red-500 focus:outline-2 focus:-outline-offset-2 focus:outline-red-900 sm:text-sm/6"
+                      placeholder="Enter your email"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="register-password"
+                    className="block text-sm/6 font-medium text-red-900"
+                  >
+                    Password
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      id="register-password"
+                      type="password"
+                      name="password"
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="block w-full rounded-md bg-white px-3 py-1.5 text-base border-2 border-red-900 text-black outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-red-900 sm:text-sm/6"
+                      placeholder="Create a password"
+                    />
+                  </div>
+                </div>
+
+                {error && (
+                  <div className={`text-sm text-center ${error.includes('successful') ? 'text-green-600' : 'text-red-600'}`}>
+                    {error}
+                  </div>
+                )}
+
+                <div>
                   <button
                     type="submit"
-                    class="flex w-full justify-center rounded-md bg-red-900 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-red-800 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                    disabled={loading}
+                    className="flex w-full justify-center rounded-md bg-red-900 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-red-800 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-900"
                   >
-                    Sign in
+                    {loading ? "Creating account..." : "Sign up"}
                   </button>
                 </div>
               </form>
 
-              <p class="mt-10 text-center text-sm/6 text-gray-400">
-                Not a member?
+              <p className="mt-10 text-center text-sm/6 text-gray-400">
+                Already have an account?
                 <a
                   href="#"
-                  class="font-semibold text-indigo-400 hover:text-indigo-300"
+                  className="font-semibold text-indigo-400 hover:text-indigo-300 cursor-pointer ml-1"
+                  onClick={() => setShowLogin(true)}
                 >
-                  Start a 14 day free trial
+                  Sign in
                 </a>
               </p>
             </div>
