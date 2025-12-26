@@ -3,7 +3,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const [showLogin, setShowLogin] = useState(true);
+  const [mode, setMode] = useState("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -11,7 +11,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, resetPassword } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -44,11 +44,26 @@ export default function Login() {
     }
   };
 
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    try {
+      await resetPassword(email);
+      setError("Password reset email sent! Check your inbox.");
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray py-12 px-4 sm:px-6 lg:px-8 mt-6">
       {/* Login Form */}
       <div className="w-full max-w-md space-y-8 p-8 bg-gray-50 rounded-lg shadow-md border border-gray-200">
-        {showLogin && (
+        {mode === "login" && (
           <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
               <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-red-800">
@@ -90,7 +105,8 @@ export default function Login() {
                     <div className="text-sm">
                       <a
                         href="#"
-                        className="font-semibold text-indigo-400 hover:text-indigo-300"
+                        className="font-semibold text-indigo-400 hover:text-indigo-300 cursor-pointer"
+                        onClick={() => setMode("forgot")}
                       >
                         Forgot password?
                       </a>
@@ -130,7 +146,7 @@ export default function Login() {
                 <a
                   href="#"
                   className="font-semibold text-indigo-400 hover:text-indigo-300 cursor-pointer"
-                  onClick={() => setShowLogin(false)}
+                  onClick={() => setMode("register")}
                 >
                   Start a 14 day free trial
                 </a>
@@ -139,7 +155,7 @@ export default function Login() {
           </div>
         )}
 
-        {!showLogin && (
+        {mode === "register" && (
           <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
               <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-red-800">
@@ -255,7 +271,70 @@ export default function Login() {
                 <a
                   href="#"
                   className="font-semibold text-indigo-400 hover:text-indigo-300 cursor-pointer ml-1"
-                  onClick={() => setShowLogin(true)}
+                  onClick={() => setMode("login")}
+                >
+                  Sign in
+                </a>
+              </p>
+            </div>
+          </div>
+        )}
+
+        {mode === "forgot" && (
+          <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+            <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+              <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-red-800">
+                Reset your password
+              </h2>
+            </div>
+
+            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+              <form onSubmit={handleResetPassword} className="space-y-6">
+                <div>
+                  <label
+                    htmlFor="reset-email"
+                    className="block text-sm/6 font-medium text-red-900"
+                  >
+                    Email address
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      id="reset-email"
+                      type="email"
+                      name="email"
+                      required
+                      autoComplete="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base border-2 border-red-900 outline-1 -outline-offset-1 outline-white/10 placeholder:text-red-500 focus:outline-2 focus:-outline-offset-2 focus:outline-red-900 sm:text-sm/6"
+                      placeholder="Enter your email"
+                    />
+                  </div>
+                </div>
+
+                {error && (
+                  <div className={`text-sm text-center ${error.includes('sent') ? 'text-green-600' : 'text-red-600'}`}>
+                    {error}
+                  </div>
+                )}
+
+                <div>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="flex w-full justify-center rounded-md bg-red-900 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-red-800 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                  >
+                    {loading ? "Sending..." : "Send reset email"}
+                  </button>
+                </div>
+              </form>
+
+              <p className="mt-10 text-center text-sm/6 text-gray-400">
+                Remember your password?
+                <a
+                  href="#"
+                  className="font-semibold text-indigo-400 hover:text-indigo-300 cursor-pointer ml-1"
+                  onClick={() => setMode("login")}
                 >
                   Sign in
                 </a>

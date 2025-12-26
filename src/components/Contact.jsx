@@ -1,8 +1,6 @@
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaGithub } from "react-icons/fa";
 import Swal from "sweetalert2";
-import { useState } from "react";
 const Contact = () => {
-  const [message, setMessage] = useState("");
   const onSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
@@ -22,7 +20,6 @@ const Contact = () => {
     }).then((res) => res.json());
 
     if (res.success) {
-      setMessage("Message sent successfully");
       Swal.fire({
         title: "Successfully!",
         text: "Your message has been submitted!",
@@ -30,7 +27,7 @@ const Contact = () => {
       });
       event.target.reset();
     } else {
-      setMessage("Something went wrong");
+      console.error("Form submission failed");
     }
     
   };

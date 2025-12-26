@@ -7,6 +7,7 @@ import Footer from './components/Footer';
 import Car from './components/Car';
 import Contact from './components/Contact';
 import Login from './components/Login';
+import ResetPassword from './components/ResetPassword';
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
           <Route path="/car" element={<Car />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
         </Routes>
         <Footer />
       </Router>

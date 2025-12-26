@@ -16,16 +16,6 @@ const CarsPage = () => {
     }
   }, [user, navigate]);
 
-  // If not authenticated, show loading or redirect message
-  if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-lg text-gray-600">Please log in to access car booking.</p>
-        </div>
-      </div>
-    );
-  }
   // Categories
   const categories = ["All cars", "Business", "Family", "Adventure", "Wedding"];
 
@@ -44,6 +34,8 @@ const CarsPage = () => {
   });
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [isPaid, setIsPaid] = useState(false);
+  const [bookingId] = useState(() => Date.now().toString().slice(-8));
+  const [invoiceId] = useState(() => Date.now().toString().slice(-8));
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -56,6 +48,17 @@ const CarsPage = () => {
     };
     fetchCars();
   }, []);
+
+  // If not authenticated, show loading or redirect message
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-lg text-gray-600">Please log in to access car booking.</p>
+        </div>
+      </div>
+    );
+  }
 
   // Filter cars based on selected category
   const filteredCars = selectedCategory === "All cars" 
@@ -80,7 +83,7 @@ const CarsPage = () => {
 
     const totalPrice = calculateTotal();
 
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('bookings')
       .insert([
         {
@@ -106,21 +109,6 @@ const CarsPage = () => {
     setIsPaid(true);
     setBookingStep(4);
   };
-
-  // Generate QR code data (in real app, this would be an actual QR generator)
-  const qrData = selectedCar ? `
-    Car Rental Invoice
-    ------------------
-    Car: ${selectedCar.name}
-    Customer: ${bookingDetails.name}
-    Period: ${bookingDetails.pickupDate} to ${bookingDetails.returnDate}
-    Days: ${bookingDetails.days}
-    Daily Rate: $${selectedCar.price}
-    Total: $${calculateTotal()}
-    Payment: ${paymentMethod.toUpperCase()}
-    Status: PAID
-    Invoice ID: INV-${Date.now()}
-  ` : '';
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
@@ -489,7 +477,7 @@ const CarsPage = () => {
                       <div className="space-y-2">
                         <div className="flex justify-between">
                           <span className="text-gray-600">Booking ID:</span>
-                          <span className="font-medium">BK-{Date.now().toString().slice(-8)}</span>
+                          <span className="font-medium">BK-{bookingId}</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600">Car:</span>
@@ -543,7 +531,7 @@ const CarsPage = () => {
                           </div>
                         </div>
                         <p className="text-xs text-gray-500 mt-4">
-                          Invoice ID: INV-{Date.now().toString().slice(-8)}
+                          Invoice ID: INV-{invoiceId}
                         </p>
                       </div>
                     </div>

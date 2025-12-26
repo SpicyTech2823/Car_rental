@@ -23,7 +23,7 @@ const Feedback = () => {
 
   const testDatabaseConnection = async () => {
     try {
-      const { data, error } = await supabase.from('feedback').select('count').limit(1);
+      const { error } = await supabase.from('feedback').select('count').limit(1);
       if (error) {
         console.error('Database connection test failed:', error);
         alert('Database connection issue. Please make sure you have run the SQL schema in Supabase.');

@@ -4,21 +4,16 @@ import car from "../assets/Images/car-insurance.png";
 import schedule from "../assets/Images/schedule.png";
 import customer_support from "../assets/Images/customer-support.png";
 import rent_car from "../assets/Videos/rent_car.mp4";
-import emma from "../assets/Images/emma.jpg";
-import javson from "../assets/Images/javson.jpg";
-import julia from "../assets/Images/julia.jpg";
 import { Link } from "react-router-dom";
 import { supabase } from "../utils/supabase";
 import Feedback from "./Feedback";
 
 const Home = () => {
   const videoRef = useRef(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, ] = useState(true);
   const [cars, setCars] = useState([]);
 
   useEffect(() => {
-    setIsVisible(true);
-
     // Fetch cars from Supabase
     const fetchCars = async () => {
       const { data, error } = await supabase.from('cars').select('*');
