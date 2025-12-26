@@ -1,9 +1,9 @@
 import { useRef, useEffect, useState } from "react";
-import video from "../assets/Videos/video1.mp4";
-import car from "../assets/Images/car-insurance.png";
-import schedule from "../assets/Images/schedule.png";
-import customer_support from "../assets/Images/customer-support.png";
-import rent_car from "../assets/Videos/rent_car.mp4";
+import video from "../assets/Videos/homepage-hero-video.mp4";
+import car from "../assets/icons/car-insurance-icon.png";
+import schedule from "../assets/icons/schedule-icon.png";
+import customer_support from "../assets/icons/customer-support-icon.png";
+import rent_car from "../assets/Videos/car-rental-guide-video.mp4";
 import { Link } from "react-router-dom";
 import { supabase } from "../utils/supabase";
 import Feedback from "./Feedback";

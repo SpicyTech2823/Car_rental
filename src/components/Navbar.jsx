@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import logo from "../assets/Images/logo.png";
+import logo from "../assets/logos/main-logo.png";
 
 const Navbar = () => {
   const { user, signOut } = useAuth();
