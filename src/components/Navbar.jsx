@@ -21,7 +21,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="w-full fixed top-5 left-5 z-50 bg-transparent" role="navigation" aria-label="Main navigation">
+    <nav className="w-full absolute top-5 left-5 z-50 bg-transparent" role="navigation" aria-label="Main navigation">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}

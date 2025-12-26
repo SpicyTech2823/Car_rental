@@ -5,7 +5,7 @@ import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-const CarsPage = () => {
+const Car = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -603,4 +603,4 @@ const CarsPage = () => {
   );
 };
 
-export default CarsPage;
+export default Car;
