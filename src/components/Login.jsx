@@ -20,10 +20,12 @@ export default function Login() {
     setError("");
 
     try {
-      await signIn(email, password);
+      await signIn(email.trim().toLowerCase(), password);
       navigate("/");
     } catch (error) {
-      setError(error.message);
+      // Generic error message to prevent user enumeration
+      setError("Invalid email or password. Please try again.");
+      console.error('Login error:', error);
     } finally {
       setLoading(false);
     }

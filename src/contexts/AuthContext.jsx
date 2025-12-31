@@ -14,6 +14,7 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,6 +22,16 @@ export const AuthProvider = ({ children }) => {
     const getInitialSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user ?? null);
+      if (session?.user) {
+        const { data: profile } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', session.user.id)
+          .maybeSingle();
+        setUserProfile(profile);
+      } else {
+        setUserProfile(null);
+      }
       setLoading(false);
     };
 
@@ -30,6 +41,27 @@ export const AuthProvider = ({ children }) => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         setUser(session?.user ?? null);
+        if (session?.user) {
+          try {
+            const { data: profile, error } = await supabase
+              .from('users')
+              .select('*')
+              .eq('id', session.user.id)
+              .maybeSingle();
+
+            if (error) {
+              console.error('Error fetching user profile:', error);
+              setUserProfile(null);
+            } else {
+              setUserProfile(profile);
+            }
+          } catch (err) {
+            console.error('Profile fetch failed:', err);
+            setUserProfile(null);
+          }
+        } else {
+          setUserProfile(null);
+        }
         setLoading(false);
       }
     );
@@ -57,7 +89,8 @@ export const AuthProvider = ({ children }) => {
             id: data.user.id, // This is already a UUID from Supabase auth
             email: data.user.email,
             name: userData.name || '',
-            phone: userData.phone || ''
+            phone: userData.phone || '',
+            role: userData.role || 'user'
           }
         ]);
 
@@ -94,6 +127,7 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     user,
+    userProfile,
     loading,
     signUp,
     signIn,

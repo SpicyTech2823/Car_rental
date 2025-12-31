@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from './contexts/AuthContext';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
@@ -8,6 +8,10 @@ import Car from './components/Car';
 import Contact from './components/Contact';
 import Login from './components/Login';
 import ResetPassword from './components/ResetPassword';
+import AdminLogin from './components/admin/AdminLogin';
+import AdminDashboard from './components/admin/AdminDashboard';
+import AdminRedirect from './components/admin/AdminRedirect';
+import NotAuthorized from './components/NotAuthorized';
 
 
 const App = () => {
@@ -22,6 +26,10 @@ const App = () => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/admin" element={<AdminRedirect />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/not-authorized" element={<NotAuthorized />} />
         </Routes>
         <Footer />
       </Router>

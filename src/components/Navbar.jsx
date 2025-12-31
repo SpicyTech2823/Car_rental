@@ -15,8 +15,12 @@ const Navbar = () => {
   const handleSignOut = async () => {
     try {
       await signOut();
+      // Force navigation to home page after logout
+      window.location.href = '/';
     } catch (error) {
       console.error('Error signing out:', error);
+      // Even if sign out fails, redirect to home
+      window.location.href = '/';
     }
   };
 
