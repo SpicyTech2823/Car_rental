@@ -1,4 +1,3 @@
-// CarsPage.jsx
 import React, { useState, useEffect } from 'react';
 import { Check, CreditCard, Calendar, User, Mail, Phone, QrCode } from 'lucide-react';
 import { supabase } from '../utils/supabase';
@@ -9,20 +8,22 @@ const Car = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  // Redirect to login if not authenticated
+  // Authentication check - redirect to login if not authenticated
   useEffect(() => {
     if (!user) {
       navigate('/login');
     }
   }, [user, navigate]);
 
-  // Categories
+  // Car categories for filtering
   const categories = ["All cars", "Business", "Family", "Adventure", "Wedding"];
 
-  // State
+  // State management for car selection and filtering
   const [cars, setCars] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All cars");
   const [selectedCar, setSelectedCar] = useState(null);
+
+  // Booking process state (multi-step wizard)
   const [bookingStep, setBookingStep] = useState(1); // 1: Select car, 2: Booking form, 3: Payment, 4: Invoice
   const [bookingDetails, setBookingDetails] = useState({
     name: "",
@@ -32,11 +33,14 @@ const Car = () => {
     returnDate: "",
     days: 1
   });
+
+  // Payment and booking completion state
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [isPaid, setIsPaid] = useState(false);
   const [bookingId] = useState(() => Date.now().toString().slice(-8));
   const [invoiceId] = useState(() => Date.now().toString().slice(-8));
 
+  // Data fetching
   useEffect(() => {
     const fetchCars = async () => {
       const { data, error } = await supabase.from('cars').select('*');

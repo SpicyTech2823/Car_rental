@@ -3,6 +3,7 @@ import { supabase } from '../utils/supabase';
 
 const AuthContext = createContext({});
 
+// Custom hook to use auth context with error handling
 // eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -13,15 +14,18 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
+  // Authentication state
   const [user, setUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get initial session
+    // Initialize auth state on app load
     const getInitialSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user ?? null);
+
+      // Fetch user profile if authenticated
       if (session?.user) {
         const { data: profile } = await supabase
           .from('users')
@@ -37,10 +41,12 @@ export const AuthProvider = ({ children }) => {
 
     getInitialSession();
 
-    // Listen for auth changes
+    // Listen for authentication state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         setUser(session?.user ?? null);
+
+        // Update user profile on auth changes
         if (session?.user) {
           try {
             const { data: profile, error } = await supabase

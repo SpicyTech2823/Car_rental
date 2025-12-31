@@ -4,6 +4,7 @@ import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
 
 const Feedback = () => {
+  // State management for feedback data and UI
   const [feedback, setFeedback] = useState([]);
   const [cars, setCars] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -15,26 +16,27 @@ const Feedback = () => {
   });
   const { user } = useAuth();
 
+  // Initialize component data
   useEffect(() => {
     fetchFeedback();
     fetchCars();
     testDatabaseConnection();
   }, []);
 
+  // Test database connection on component mount
   const testDatabaseConnection = async () => {
     try {
       const { error } = await supabase.from('feedback').select('count').limit(1);
       if (error) {
         console.error('Database connection test failed:', error);
         alert('Database connection issue. Please make sure you have run the SQL schema in Supabase.');
-      } else {
-        console.log('Database connection successful');
       }
     } catch (err) {
       console.error('Database test error:', err);
     }
   };
 
+  // Data fetching functions
   const fetchCars = async () => {
     const { data, error } = await supabase
       .from('cars')
@@ -68,10 +70,9 @@ const Feedback = () => {
     }
   };
 
+  // Form submission handler
   const handleSubmitFeedback = async (e) => {
     e.preventDefault();
-
-    console.log('User object:', user); // Debug log
 
     if (!user) {
       alert('Please log in to submit feedback.');
@@ -102,13 +103,9 @@ const Feedback = () => {
         feedbackData.car_id = formData.car_id;
       }
 
-      console.log('Feedback data to insert:', feedbackData); // Debug log
-
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('feedback')
         .insert([feedbackData]);
-
-      console.log('Supabase response:', { data, error }); // Debug log
 
       if (error) {
         console.error('Supabase error details:', error);

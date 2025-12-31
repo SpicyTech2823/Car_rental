@@ -7,18 +7,28 @@ import { Edit, Trash2, Plus, Calendar, MessageSquare, Star, Eye, Check, X, Car }
 export default function AdminDashboard() {
   const { signOut } = useAuth();
   const navigate = useNavigate();
+
+  // State management for different data types
   const [cars, setCars] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [feedback, setFeedback] = useState([]);
+
+  // UI state management
   const [adminCheckLoading, setAdminCheckLoading] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [activeTab, setActiveTab] = useState('cars');
+
+  // Car management state
   const [editingCar, setEditingCar] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
+
+  // Modal state for viewing details
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [selectedFeedback, setSelectedFeedback] = useState(null);
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+
+  // Form state for car editing
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -31,42 +41,24 @@ export default function AdminDashboard() {
   // Admin verification function
   const verifyAdminAccess = useCallback(async () => {
     try {
-      // Step 1: Check if user is authenticated
       const { data: { user: currentUser }, error: userError } = await supabase.auth.getUser();
 
       if (userError || !currentUser) {
-        console.log('No authenticated user found');
         navigate('/admin/login');
         return false;
       }
 
-      // Step 2: Query admins table to verify user exists
       const { data: adminData, error: adminError } = await supabase
         .from('admins')
         .select('id')
         .single();
 
-      if (adminError) {
-        console.log('Admin verification error:', adminError);
-        console.log('Error code:', adminError.code);
-        console.log('Error message:', adminError.message);
-        console.log('User ID attempting access:', currentUser.id);
-        console.log('User email:', currentUser.email);
-      }
-
       if (adminError || !adminData) {
-        console.log('User not found in admins table:', adminError?.message);
-        console.log('This usually means:');
-        console.log('1. User is not in the admins table');
-        console.log('2. RLS policy is blocking access');
-        console.log('3. Table or policy doesn\'t exist');
-        // Sign out and redirect to not authorized page
         await signOut();
         navigate('/not-authorized');
         return false;
       }
 
-      console.log('Admin access verified for user:', currentUser.id);
       return true;
 
     } catch (error) {
@@ -77,6 +69,7 @@ export default function AdminDashboard() {
     }
   }, [navigate, signOut]);
 
+  // Data fetching functions
   const fetchCars = async () => {
     const { data, error } = await supabase.from('cars').select('*');
     if (error) {
@@ -87,7 +80,6 @@ export default function AdminDashboard() {
   };
 
   const fetchBookings = async () => {
-    console.log('Fetching bookings...');
     const { data, error } = await supabase
       .from('bookings')
       .select('*')
@@ -95,21 +87,12 @@ export default function AdminDashboard() {
 
     if (error) {
       console.error('Error fetching bookings:', error);
-      console.error('Error details:', {
-        message: error.message,
-        code: error.code,
-        details: error.details,
-        hint: error.hint
-      });
     } else {
-      console.log('Bookings data received:', data);
-      console.log('Number of bookings:', data?.length || 0);
       setBookings(data || []);
     }
   };
 
   const fetchFeedback = async () => {
-    console.log('Fetching feedback...');
     const { data, error } = await supabase
       .from('feedback')
       .select('*')
@@ -117,15 +100,7 @@ export default function AdminDashboard() {
 
     if (error) {
       console.error('Error fetching feedback:', error);
-      console.error('Error details:', {
-        message: error.message,
-        code: error.code,
-        details: error.details,
-        hint: error.hint
-      });
     } else {
-      console.log('Feedback data received:', data);
-      console.log('Number of feedback items:', data?.length || 0);
       setFeedback(data || []);
     }
   };
@@ -243,6 +218,7 @@ export default function AdminDashboard() {
     checkAdminAccess();
   }, [navigate, signOut, verifyAdminAccess]);
 
+  // Car management handlers
   const handleSubmit = async (e) => {
     e.preventDefault();
     const carData = {
@@ -348,9 +324,11 @@ export default function AdminDashboard() {
     );
   }
 
+  // Main dashboard UI
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8 pt-20 md:pt-24">
       <div className="max-w-7xl mx-auto">
+        {/* Dashboard Header */}
         <div className="mb-8">
           <div className="flex items-center gap-4 mb-4">
             <h1 className="text-3xl font-bold text-red-800">Admin Dashboard</h1>

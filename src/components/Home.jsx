@@ -9,10 +9,14 @@ import { supabase } from "../utils/supabase";
 import Feedback from "./Feedback";
 
 const Home = () => {
+  // Video and visibility refs
   const videoRef = useRef(null);
-  const [isVisible, ] = useState(true);
+  const [isVisible] = useState(true);
+
+  // Car data state
   const [cars, setCars] = useState([]);
 
+  // Component initialization and data fetching
   useEffect(() => {
     // Fetch cars from Supabase
     const fetchCars = async () => {
@@ -25,7 +29,7 @@ const Home = () => {
     };
     fetchCars();
 
-    // Optional: Add video play/pause on visibility
+    // Video visibility handling - pause/play based on page visibility
     const handleVisibilityChange = () => {
       if (videoRef.current) {
         if (document.hidden) {
@@ -43,8 +47,8 @@ const Home = () => {
     };
   }, []);
 
-  // Car slider 
-  const carsPerPage = 4; // change if you want
+  // Car slider functionality
+  const carsPerPage = 4; // Number of cars to show per page
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextCar = () => {
