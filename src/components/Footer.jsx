@@ -1,6 +1,6 @@
 import React from "react";
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaGithub } from "react-icons/fa";
-import logoImage from "../assets/logos/secondary-logo.png";
+import logoImage from "../assets/logos/main-logo.png";
 const Footer = () => {
   const quickLinks = [
     { title: "About Us", links: ["Company", "Team", "Career", "Blog"] },
