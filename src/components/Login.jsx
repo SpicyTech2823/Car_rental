@@ -150,7 +150,7 @@ export default function Login() {
                   className="font-semibold text-indigo-400 hover:text-indigo-300 cursor-pointer"
                   onClick={() => setMode("register")}
                 >
-                  Start a 14 day free trial
+                  Register
                 </a>
               </p>
             </div>
